@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio Online</title>
+    <style>
+        /* Estilos base e cores verdes */
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --text-color: #333;
+            --background-color: #f0f2f5;
+            --button-hover: #1b5e20;
+            --item-background: #fff;
+            --item-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            --item-border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding-bottom: 80px;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+            flex-direction: column;
+        }
+
+        .splash-screen img {
+            width: 80%;
+            max-width: 300px;
+            animation: fadeIn 1.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Conteúdo principal do menu */
+        #main-content {
+            display: none;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .menu-section {
+            padding: 10px 15px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+            margin-top: 25px;
+            font-size: 1.5em;
+        }
+        
+        .item {
+            background-color: var(--item-background);
+            border-radius: var(--item-border-radius);
+            box-shadow: var(--item-shadow);
+            margin-bottom: 15px;
+            padding: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .item:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .item-details h4 {
+            margin: 0;
+            font-size: 1.2em;
+            color: var(--text-color);
+        }
+
+        .item-details p {
+            margin: 5px 0 0;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .item-price {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        .options {
+            display: none;
+            flex-direction: column;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px dashed #ccc;
+        }
+        
+        .option-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--primary-color);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            gap: 15px;
+        }
+        
+        .quantity-selector button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1.2em;
+            transition: background-color 0.2s;
+        }
+        
+        .quantity-selector button:hover {
+            background-color: #66bb6a;
+        }
+
+        .quantity-selector input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 5px;
+            -moz-appearance: textfield;
+        }
+        .quantity-selector input::-webkit-outer-spin-button,
+        .quantity-selector input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: var(--item-border-radius);
+            font-size: 1.1em;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .add-to-cart:hover {
+            background-color: var(--button-hover);
+        }
+        
+        /* Botão flutuante do carrinho */
+        .floating-cart-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 200;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ffc107;
+            color: var(--text-color);
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        /* Modal do carrinho */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            z-index: 300;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .cart-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #cart-items {
+            list-style: none;
+            padding: 0;
+        }
+        
+        #cart-items li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+        
+        #cart-items li:last-child {
+            border-bottom: none;
+        }
+        
+        #total-price {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 15px;
+            color: var(--primary-color);
+        }
+        
+        .whatsapp-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #25D366;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .whatsapp-button:hover {
+            background-color: #128C7E;
+        }
+
+        /* Estilos para a opção Meia a Meia */
+        .half-half-options {
+            display: none;
+            flex-direction: column;
+            padding: 15px 0;
+            margin-top: 15px;
+            border-top: 1px dashed #ccc;
+        }
+
+        .half-half-options select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        
+        .half-half-options .add-half-to-cart {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: var(--item-border-radius);
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        .half-half-options .add-half-to-cart:hover {
+             background-color: var(--button-hover);
+        }
+
+        /* Toast de notificação */
+        #toast {
+            visibility: hidden;
+            min-width: 280px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 400;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 30px;
+            font-size: 1em;
+            opacity: 0;
+            transition: bottom 0.5s, opacity 0.5s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            bottom: 50px;
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="splash-screen" id="splash-screen">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgIVywerTEx7Qorio908b4OTVv3x2yo2lPl38CVdhCxtJOK23tK_pRTy8-hcSIWtNLZ6ifuzf8WhXOmFqBkr2aOqR78JmGc_Wc5uRLHtLUAYenxGd26uMjEg5E0bMKp03cqXDwXuJ7yA_0LXYoUxIn6ye7Vn6Q5CnTv-oPnLAMz58zVaijoADv3cRQM5T3L/s1600/20250614_012036.png" alt="Logo da Pizzaria">
+</div>
+
+<div class="container" id="main-content">
+    <header>
+        <h1>Pizzaria Delícia</h1>
+    </header>
+
+    <div class="menu-section">
+        <h2>Monte sua Pizza</h2>
+        <div class="item" onclick="toggleHalfHalfOptions()">
+            <div class="item-details">
+                <h4>Pizza Meia a Meia</h4>
+                <p>Escolha dois sabores. O preço será o do sabor de maior valor.</p>
+            </div>
+        </div>
+        <div class="half-half-options" id="half-half-options">
+            <select id="half-1">
+                <option value="">Selecione o 1º sabor</option>
+            </select>
+            <select id="half-2">
+                <option value="">Selecione o 2º sabor</option>
+            </select>
+            <div class="quantity-selector">
+                <label>Quantidade:</label>
+                <button onclick="changeQuantity(this, -1)">-</button>
+                <input type="number" id="half-half-quantity" value="1" min="1" readonly>
+                <button onclick="changeQuantity(this, 1)">+</button>
+            </div>
+            <button class="add-half-to-cart" onclick="addHalfHalfPizzaToCart()">Adicionar Pizza Meia a Meia</button>
+        </div>
+
+        <h2>Pizzas Salgadas</h2>
+        <div id="pizzas-salgadas"></div>
+
+        <h2>Pizzas Doces</h2>
+        <div id="pizzas-doces"></div>
+
+        <h2>Bebidas</h2>
+        <div id="bebidas"></div>
+    </div>
+</div>
+
+<button class="floating-cart-button" onclick="showCart()">
+    <span class="cart-count" id="cart-count">0</span>
+    🛒
+</button>
+
+<div id="cart-modal" class="cart-modal">
+    <div class="cart-content">
+        <span class="close-button" onclick="hideCart()">&times;</span>
+        <h3>Seu Pedido</h3>
+        <ul id="cart-items"></ul>
+        <div id="total-price">Total: R$ 0,00</div>
+        <a href="#" class="whatsapp-button" onclick="sendOrder()">Finalizar Pedido</a>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    const menuItems = {
+        salgadas: [
+            { id: '4_queijos', name: '4 Queijos', ingredients: 'molho, mussarela, parmesão, provolone, gorgonzola, azeitona e orégano', prices: { grande: 47.00, calzone: 37.00 } },
+            { id: '5_queijos', name: '5 Queijos', ingredients: 'molho, mussarela, parmesão, provolone, gorgonzola, catupiry, azeitona e orégano', prices: { grande: 49.00, calzone: 39.00 } },
+            { id: 'abobrinha_i', name: 'Abobrinha I', ingredients: 'molho, mussarela, abobrinha, alho frito, azeitona e orégano', prices: { grande: 41.00, calzone: 34.00 } },
+            { id: 'abobrinha_ii', name: 'Abobrinha II', ingredients: 'molho, mussarela, abobrinha, pimenta calabresa, azeitona e orégano', prices: { grande: 41.00, calzone: 34.00 } },
+            { id: 'alho', name: 'Alho', ingredients: 'molho, mussarela, alho frito, azeitona e orégano', prices: { grande: 45.00, calzone: 35.00 } },
+            { id: 'aliche', name: 'Aliche', ingredients: 'molho, mussarela, aliche, tomate, azeitona e orégano', prices: { grande: 49.00, calzone: 39.00 } },
+            { id: 'americana', name: 'Americana', ingredients: 'molho, mussarela, lombinho, pimentão, champignon, tomate cereja, azeitona sem caroço e orégano', prices: { grande: 50.00, calzone: 40.00 } },
+            { id: 'atum_i', name: 'Atum I', ingredients: 'molho, atum, cebola, azeitona e orégano', prices: { grande: 46.00, calzone: 36.00 } },
+            { id: 'atum_i_com_mussarela', name: 'Atum I (com mussarela)', ingredients: 'molho, mussarela, atum, cebola, azeitona e orégano', prices: { grande: 48.00, calzone: 38.00 } },
+            { id: 'bacon', name: 'Bacon', ingredients: 'molho, mussarela, bacon, azeitona e orégano', prices: { grande: 44.00, calzone: 34.00 } },
+            { id: 'brocolis', name: 'Brócolis', ingredients: 'molho, brócolis, mussarela, bacon, azeitona e orégano', prices: { grande: 47.00, calzone: 38.00 } },
+            { id: 'calabresa_i', name: 'Calabresa I', ingredients: 'molho, calabresa, tomate, cebola, azeitona e orégano', prices: { grande: 38.00, calzone: 29.00 } },
+            { id: 'calabresa_ii', name: 'Calabresa II', ingredients: 'molho, mussarela, calabresa, cebola, azeitona e orégano', prices: { grande: 43.00, calzone: 34.00 } },
+            { id: 'frango_catupiry', name: 'Frango Catupiry', ingredients: 'molho, frango, catupiry, azeitona e orégano', prices: { grande: 47.00, calzone: 37.00 } },
+            { id: 'genova', name: 'Gênova', ingredients: 'molho, mussarela, provolone, presunto, molho pesto e azeitona', prices: { grande: 48.00, calzone: 37.00 } },
+            { id: 'lombinho', name: 'Lombinho', ingredients: 'molho, mussarela, lombinho, provolone, azeitona e orégano', prices: { grande: 46.00, calzone: 36.00 } },
+            { id: 'marguerita', name: 'Marguerita', ingredients: 'molho, mussarela, parmesão, tomate, azeitona e manjericão', prices: { grande: 40.00, calzone: 30.00 } },
+            { id: 'mussarela', name: 'Mussarela', ingredients: 'molho, mussarela, tomate, azeitona e orégano', prices: { grande: 38.00, calzone: 29.00 } },
+            { id: 'peperonni', name: 'Peperonni', ingredients: 'molho, mussarela, peperonni e azeitona', prices: { grande: 49.00, calzone: 39.00 } },
+            { id: 'pomodoro', name: 'Pomodoro', ingredients: 'molho, parmesão, alho frito, tomate e orégano', prices: { grande: 44.00, calzone: 34.00 } },
+            { id: 'potatosa', name: 'Potatosa', ingredients: 'molho, batata, parmesão, calabresa, catupiry, azeitona sem caroço e orégano', prices: { grande: 45.00, calzone: 35.00 } },
+            { id: 'portuguesa', name: 'Portuguesa', ingredients: 'molho, mussarela, presunto, ovo cozido, ervilha, tomate, azeitona sem caroço e orégano', prices: { grande: 50.00, calzone: 45.00 } },
+            { id: 'rucula_e_tomate_seco', name: 'Rúcula e Tomate Seco', ingredients: 'molho, mussarela, rúcula, tomate seco, azeitona e orégano', prices: { grande: 46.00, calzone: 36.00 } },
+            { id: 'toscana', name: 'Toscana', ingredients: 'molho, mussarela, linguiça calabresa moída, tomate, azeitona e orégano', prices: { grande: 45.00, calzone: 35.00 } },
+        ],
+        doces: [
+            { id: 'anita_e_garibaldi', name: 'Anita e Garibaldi', ingredients: 'parmesão e goiabada', prices: { grande: 45.00, calzone: 35.00 } },
+            { id: 'banana', name: 'Banana', ingredients: 'banana, açúcar, doce de leite e canela', prices: { grande: 41.00, calzone: 31.00 } }
+        ],
+        bebidas: [
+            { id: 'coca_cola_2l', name: 'Coca Cola 2L', price: 18.00 },
+            { id: 'guarana_antarctica_2l', name: 'Guaraná Antarctica 2L', price: 18.00 },
+            { id: 'guarana_kuat_2l', name: 'Guaraná Kuat 2L', price: 12.00 },
+            { id: 'sprite_2l', name: 'Sprite 2L', price: 15.00 }
+        ]
+    };
+    
+    let cart = [];
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.opacity = '0';
+            document.getElementById('splash-screen').style.visibility = 'hidden';
+            document.getElementById('main-content').style.display = 'block';
+        }, 2000);
+        renderMenu();
+    });
+
+    function formatPrice(price) {
+        return `R$ ${price.toFixed(2).replace('.', ',')}`;
+    }
+
+    function renderMenu() {
+        const halfHalfSelect1 = document.getElementById('half-1');
+        const halfHalfSelect2 = document.getElementById('half-2');
+        
+        const allPizzaOptions = [...menuItems.salgadas, ...menuItems.doces];
+
+        allPizzaOptions.forEach(pizza => {
+            const option = document.createElement('option');
+            option.value = pizza.id;
+            option.text = `${pizza.name} (${formatPrice(pizza.prices.grande)})`;
+            option.setAttribute('data-price', pizza.prices.grande);
+            halfHalfSelect1.appendChild(option.cloneNode(true));
+            halfHalfSelect2.appendChild(option.cloneNode(true));
+        });
+
+        renderSection('pizzas-salgadas', menuItems.salgadas);
+        renderSection('pizzas-doces', menuItems.doces);
+        renderSection('bebidas', menuItems.bebidas);
+    }
+    
+    function renderSection(containerId, items) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = items.map(item => `
+            <div class="item" onclick="toggleOptions(this, '${item.id}')">
+                <div class="item-details">
+                    <h4>${item.name}</h4>
+                    <p>${item.ingredients ? 'Ingredientes: ' + item.ingredients + '.' : 'Preço único.'}</p>
+                </div>
+                <div class="options" id="options-${item.id}">
+                    <div class="quantity-selector">
+                        <label>Quantidade:</label>
+                        <button onclick="changeQuantity(this, -1)">-</button>
+                        <input type="number" value="1" min="1" readonly>
+                        <button onclick="changeQuantity(this, 1)">+</button>
+                    </div>
+                    ${item.prices ? `
+                        <label class="option-label"><input type="radio" name="${item.id}-size" value="Grande" data-price="${item.prices.grande}" checked> Grande (${formatPrice(item.prices.grande)})</label>
+                        <label class="option-label"><input type="radio" name="${item.id}-size" value="Calzone" data-price="${item.prices.calzone}"> Calzone (${formatPrice(item.prices.calzone)})</label>
+                    ` : ''}
+                    <button class="add-to-cart" onclick="addToCart(event, '${item.id}')">Adicionar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function toggleOptions(element, id) {
+        const optionsDiv = document.getElementById(`options-${id}`);
+        const allOptions = document.querySelectorAll('.options');
+        allOptions.forEach(opt => {
+            if (opt.id !== `options-${id}`) {
+                opt.style.display = 'none';
+            }
+        });
+        optionsDiv.style.display = optionsDiv.style.display === 'flex' ? 'none' : 'flex';
+    }
+    
+    function toggleHalfHalfOptions() {
+        const halfHalfOptions = document.getElementById('half-half-options');
+        const allOptions = document.querySelectorAll('.options');
+        allOptions.forEach(opt => opt.style.display = 'none');
+        halfHalfOptions.style.display = halfHalfOptions.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function changeQuantity(button, change) {
+        const input = button.parentNode.querySelector('input');
+        let value = parseInt(input.value) + change;
+        if (value < 1) value = 1;
+        input.value = value;
+    }
+    
+    function addToCart(event, id) {
+        event.stopPropagation();
+        const itemContainer = event.target.closest('.item');
+        const optionsDiv = itemContainer.querySelector('.options');
+        const quantity = parseInt(optionsDiv.querySelector('input').value);
+        
+        const menuItem = [...menuItems.salgadas, ...menuItems.doces, ...menuItems.bebidas].find(item => item.id === id);
+
+        let pricePerUnit = 0;
+        let details = '';
+
+        if (menuItem.price) {
+            pricePerUnit = menuItem.price;
+            details = 'Unidade';
+        } else {
+            const selectedOption = optionsDiv.querySelector('input[type="radio"]:checked');
+            if (!selectedOption) {
+                alert('Por favor, selecione o tamanho da pizza.');
+                return;
+            }
+            pricePerUnit = parseFloat(selectedOption.dataset.price);
+            details = selectedOption.value;
+        }
+
+        const existingItemIndex = cart.findIndex(item => item.id === id && item.details === details);
+        
+        if (existingItemIndex > -1) {
+            cart[existingItemIndex].quantity += quantity;
+            cart[existingItemIndex].price = cart[existingItemIndex].quantity * pricePerUnit;
+        } else {
+            cart.push({
+                id: id,
+                name: menuItem.name,
+                details: details,
+                quantity: quantity,
+                price: pricePerUnit * quantity
+            });
+        }
+        
+        updateCart();
+        showToast(`${quantity}x ${menuItem.name} adicionado ao carrinho!`);
+        optionsDiv.style.display = 'none';
+        itemContainer.querySelector('.quantity-selector input').value = 1;
+    }
+
+    function addHalfHalfPizzaToCart() {
+        const half1Id = document.getElementById('half-1').value;
+        const half2Id = document.getElementById('half-2').value;
+        const quantity = parseInt(document.getElementById('half-half-quantity').value);
+
+        if (!half1Id || !half2Id) {
+            alert('Por favor, selecione dois sabores para a pizza.');
+            return;
+        }
+        
+        const pizza1 = [...menuItems.salgadas, ...menuItems.doces].find(p => p.id === half1Id);
+        const pizza2 = [...menuItems.salgadas, ...menuItems.doces].find(p => p.id === half2Id);
+
+        if (!pizza1 || !pizza2) return;
+
+        const finalPricePerUnit = Math.max(pizza1.prices.grande, pizza2.prices.grande);
+        const itemName = `Meia a Meia: ${pizza1.name} / ${pizza2.name}`;
+        
+        const existingItemIndex = cart.findIndex(item => item.name === itemName);
+
+        if (existingItemIndex > -1) {
+            cart[existingItemIndex].quantity += quantity;
+            cart[existingItemIndex].price = cart[existingItemIndex].quantity * finalPricePerUnit;
+        } else {
+            cart.push({
+                id: `half_${half1Id}_${half2Id}`,
+                name: itemName,
+                details: 'Grande',
+                quantity: quantity,
+                price: finalPricePerUnit * quantity
+            });
+        }
+
+        updateCart();
+        showToast(`${quantity}x Pizza Meia a Meia adicionada ao carrinho!`);
+        toggleHalfHalfOptions();
+        
+        document.getElementById('half-1').value = '';
+        document.getElementById('half-2').value = '';
+        document.getElementById('half-half-quantity').value = 1;
+    }
+    
+    function updateCart() {
+        const cartItemsList = document.getElementById('cart-items');
+        const cartCountSpan = document.getElementById('cart-count');
+        cartItemsList.innerHTML = '';
+        let total = 0;
+        let count = 0;
+
+        cart.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${item.quantity}x ${item.name} (${item.details})</span>
+                <span>${formatPrice(item.price)}</span>
+                <button onclick="removeFromCart(${index})" style="background-color: #f44336; color: white; border: none; padding: 5px; border-radius: 50%; cursor: pointer;">&times;</button>
+            `;
+            cartItemsList.appendChild(li);
+            total += item.price;
+            count += item.quantity;
+        });
+
+        document.getElementById('total-price').innerText = `Total: ${formatPrice(total)}`;
+        cartCountSpan.innerText = count;
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+    
+    function showCart() {
+        document.getElementById('cart-modal').style.display = 'block';
+    }
+
+    function hideCart() {
+        document.getElementById('cart-modal').style.display = 'none';
+    }
+
+    function sendOrder() {
+        if (cart.length === 0) {
+            alert('Seu carrinho está vazio!');
+            return;
+        }
+
+        let orderText = "Olá, gostaria de fazer um pedido:%0A%0A";
+        let total = 0;
+
+        cart.forEach(item => {
+            orderText += `* ${item.quantity}x ${item.name} (${item.details}): ${formatPrice(item.price)}%0A`;
+            total += item.price;
+        });
+
+        orderText += `%0A*Total: ${formatPrice(total)}*`;
+        
+        const whatsappUrl = `https://wa.me/5511993407322?text=${orderText}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.classList.add("show");
+        setTimeout(function(){ toast.classList.remove("show"); }, 3000);
+    }
+</script>
+
+</body>
+</html>
