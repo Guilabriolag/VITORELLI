@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Cardápio</title>
+  <title>Cardápio Vitorelli</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -174,8 +174,8 @@
 <body>
 
   <header>
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgIVywerTEx7Qorio908b4OTVv3x2yo2lPl38CVdhCxtJOK23tK_pRTy8-hcSIWtNLZ6ifuzf8WhXOmFqBkr2aOqR78JmGc_Wc5uRLHtLUAYenxGd26uMjEg5E0bMKp03cqXDwXuJ7yA_0LXYoUxIn6ye7Vn6Q5CnTv-oPnLAMz58zVaijoADv3cRQM5T3L/s1600/20250614_012036.png" alt="Logo Vetorelli">
-    <h1>Cardápio Vetorelli</h1>
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgIVywerTEx7Qorio908b4OTVv3x2yo2lPl38CVdhCxtJOK23tK_pRTy8-hcSIWtNLZ6ifuzf8WhXOmFqBkr2aOqR78JmGc_Wc5uRLHtLUAYenxGd26uMjEg5E0bMKp03cqXDwXuJ7yA_0LXYoUxIn6ye7Vn6Q5CnTv-oPnLAMz58zVaijoADv3cRQM5T3L/s1600/20250614_012036.png" alt="Logo Vitorelli">
+    <h1>Cardápio Vitorelli</h1>
   </header>
 
   <nav>
@@ -314,7 +314,7 @@
         } else if (categoriaAtual === 'broto') {
           precoTexto = sabor.broto ? `R$ ${sabor.broto.toFixed(2)}` : 'Preço sob consulta';
         } else if (categoriaAtual === 'calzone') {
-          const precoCalzone = 37; /* Alterado para 37 */
+          const precoCalzone = 37;
           precoTexto = `R$ ${precoCalzone.toFixed(2)}`;
         } else {
           precoTexto = sabor.inteira ? `R$ ${sabor.inteira.toFixed(2)}` : 'Preço sob consulta';
@@ -343,7 +343,7 @@
         preco = precoBroto;
       } else if (categoriaAtual === 'calzone') {
         tipo = 'Calzone';
-        preco = 37; // Alterado para 37
+        preco = 37;
       } else {
         tipo = 'Bebida';
         preco = precoInteira;
