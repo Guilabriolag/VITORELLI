@@ -169,6 +169,60 @@
     }
 
     #enviar:hover { background: #ff5c5c; }
+
+    /* Estilos para o Pop-up personalizado */
+    .custom-alert-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .custom-alert-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .custom-alert-box {
+      background: #2c2c2c;
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 80%;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+    
+    .custom-alert-overlay.show .custom-alert-box {
+        transform: scale(1);
+    }
+
+    .custom-alert-box h3 {
+      color: #ff3c3c;
+      margin-bottom: 10px;
+    }
+
+    .custom-alert-box button {
+      margin-top: 15px;
+      padding: 8px 20px;
+      background: #ff3c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
@@ -231,6 +285,14 @@
       <button id="enviar" onclick="enviarPedido()">Enviar Pedido</button>
     </div>
   </section>
+
+  <div id="custom-alert-overlay" class="custom-alert-overlay" onclick="hideCustomAlert()">
+    <div id="custom-alert-box" class="custom-alert-box" onclick="event.stopPropagation()">
+      <h3 id="custom-alert-title"></h3>
+      <p id="custom-alert-message"></p>
+      <button onclick="hideCustomAlert()">OK</button>
+    </div>
+  </div>
 
   <script>
     const sabores = [
@@ -352,7 +414,7 @@
       if (modoMeia) {
         if (saboresSelecionadosMeia.length < 2) {
           saboresSelecionadosMeia.push({ nome, preco: precoInteira });
-          alert(`Sabor ${nome} adicionado! Escolha o segundo sabor.`);
+          showCustomAlert('Vitorelli', `Sabor ${nome} adicionado! Escolha o segundo sabor.`);
           if (saboresSelecionadosMeia.length === 2) {
             const [sabor1, sabor2] = saboresSelecionadosMeia;
             const precoFinal = Math.max(sabor1.preco, sabor2.preco);
@@ -417,6 +479,16 @@
       const numero = '5511993407322';
       const texto = encodeURIComponent(msg);
       window.open(`https://wa.me/${numero}?text=${texto}`, '_blank');
+    }
+
+    function showCustomAlert(title, message) {
+      document.getElementById('custom-alert-title').innerText = title;
+      document.getElementById('custom-alert-message').innerText = message;
+      document.getElementById('custom-alert-overlay').classList.add('show');
+    }
+
+    function hideCustomAlert() {
+      document.getElementById('custom-alert-overlay').classList.remove('show');
     }
   </script>
 </body>
