@@ -419,11 +419,13 @@
             const [sabor1, sabor2] = saboresSelecionadosMeia;
             const precoFinal = Math.max(sabor1.preco, sabor2.preco);
             pedidoArea.value += `Pizza Meia-a-meia: ${sabor1.nome} & ${sabor2.nome} - R$ ${precoFinal.toFixed(2)}\n`;
+            showCustomAlert('Vitorelli', `Meia ${sabor1.nome} e Meia ${sabor2.nome} adicionadas ao carrinho.`);
             saboresSelecionadosMeia = [];
           }
         }
       } else {
         pedidoArea.value += `${tipo}: ${nome} - R$ ${preco.toFixed(2)}\n`;
+        showCustomAlert('Vitorelli', `${tipo}: ${nome} adicionado ao carrinho.`);
       }
     }
 
