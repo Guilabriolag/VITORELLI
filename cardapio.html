@@ -260,8 +260,8 @@
       { nome: "Toscana", ingredientes: "molho, mussarela, linguiça calabresa moída, tomate, azeitona e orégano", inteira: 45, broto: 35, categoria: "pizza" },
       { nome: "Anita e Garibaldi", ingredientes: "parmesão e goiabada", inteira: 45, broto: 35, categoria: "doce", tipo: "pizza" },
       { nome: "Banana", ingredientes: "banana, açúcar, doce de leite e canela", inteira: 41, broto: 31, categoria: "doce", tipo: "pizza" },
-      { nome: "Calzone de Frango", ingredientes: "molho, frango, catupiry, azeitona e orégano", inteira: 35, broto: null, categoria: "calzone" },
-      { nome: "Calzone de Calabresa", ingredientes: "molho, calabresa, cebola, azeitona e orégano", inteira: 35, broto: null, categoria: "calzone" },
+      { nome: "Calzone de Frango", ingredientes: "molho, frango, catupiry, azeitona e orégano", inteira: 37, broto: null, categoria: "calzone" },
+      { nome: "Calzone de Calabresa", ingredientes: "molho, calabresa, cebola, azeitona e orégano", inteira: 37, broto: null, categoria: "calzone" },
       { nome: "Coca-Cola 2L", ingredientes: "Refrigerante", inteira: 18, broto: null, categoria: "bebidas" },
       { nome: "Guaraná Antarctica 2L", ingredientes: "Refrigerante", inteira: 18, broto: null, categoria: "bebidas" },
       { nome: "Guaraná Kuat 2L", ingredientes: "Refrigerante", inteira: 12, broto: null, categoria: "bebidas" },
@@ -314,7 +314,7 @@
         } else if (categoriaAtual === 'broto') {
           precoTexto = sabor.broto ? `R$ ${sabor.broto.toFixed(2)}` : 'Preço sob consulta';
         } else if (categoriaAtual === 'calzone') {
-          const precoCalzone = 35; // Preço fixo para qualquer calzone.
+          const precoCalzone = 37; /* Alterado para 37 */
           precoTexto = `R$ ${precoCalzone.toFixed(2)}`;
         } else {
           precoTexto = sabor.inteira ? `R$ ${sabor.inteira.toFixed(2)}` : 'Preço sob consulta';
@@ -343,7 +343,7 @@
         preco = precoBroto;
       } else if (categoriaAtual === 'calzone') {
         tipo = 'Calzone';
-        preco = 35; // Preço fixo para calzone
+        preco = 37; // Alterado para 37
       } else {
         tipo = 'Bebida';
         preco = precoInteira;
