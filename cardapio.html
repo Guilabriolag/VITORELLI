@@ -254,10 +254,13 @@
 
       const saboresFiltrados = sabores.filter(sabor => {
         if (categoriaAtual === 'pizza') {
-          return sabor.categoria === 'pizza' || (sabor.categoria === 'doce' && sabor.tipo === 'pizza');
+          return (sabor.categoria === 'pizza' || sabor.categoria === 'doce') && sabor.inteira;
         }
         if (categoriaAtual === 'broto') {
-          return sabor.broto !== null && (sabor.categoria === 'pizza' || (sabor.categoria === 'doce' && sabor.tipo === 'pizza'));
+          return (sabor.categoria === 'pizza' || sabor.categoria === 'doce') && sabor.broto;
+        }
+        if (categoriaAtual === 'calzone') {
+          return (sabor.categoria === 'pizza' || sabor.categoria === 'doce');
         }
         return sabor.categoria === categoriaAtual;
       });
@@ -266,12 +269,15 @@
         const item = document.createElement('div');
         item.className = 'item';
         let precoTexto = '';
-        if (tipo === 'inteira' || tipo === null) {
+        if (categoriaAtual === 'pizza') {
           precoTexto = sabor.inteira ? `R$ ${sabor.inteira.toFixed(2)}` : 'Preço sob consulta';
-        } else if (tipo === 'meia' && sabor.inteira) {
-          precoTexto = `R$ ${sabor.inteira.toFixed(2)}`;
-        } else if (tipo === 'meia' && sabor.broto) {
-          precoTexto = `R$ ${sabor.broto.toFixed(2)}`;
+        } else if (categoriaAtual === 'broto') {
+          precoTexto = sabor.broto ? `R$ ${sabor.broto.toFixed(2)}` : 'Preço sob consulta';
+        } else if (categoriaAtual === 'calzone') {
+          const precoCalzone = 35; // Preço fixo para qualquer calzone.
+          precoTexto = `R$ ${precoCalzone.toFixed(2)}`;
+        } else {
+          precoTexto = sabor.inteira ? `R$ ${sabor.inteira.toFixed(2)}` : 'Preço sob consulta';
         }
 
         item.innerHTML = `
@@ -287,29 +293,35 @@
     function adicionar(nome, precoInteira, precoBroto) {
       const pedidoArea = document.getElementById('pedido');
       let preco;
-      let tamanho;
+      let tipo;
 
-      if (categoriaAtual === 'pizza' || categoriaAtual === 'broto') {
-        tamanho = categoriaAtual === 'pizza' ? 'Inteira' : 'Broto';
-        preco = categoriaAtual === 'pizza' ? precoInteira : precoBroto;
+      if (categoriaAtual === 'pizza') {
+        tipo = 'Pizza Inteira';
+        preco = precoInteira;
+      } else if (categoriaAtual === 'broto') {
+        tipo = 'Pizza Broto';
+        preco = precoBroto;
+      } else if (categoriaAtual === 'calzone') {
+        tipo = 'Calzone';
+        preco = 35; // Preço fixo para calzone
+      } else {
+        tipo = 'Bebida';
+        preco = precoInteira;
+      }
 
-        if (modoMeia) {
-          if (saboresSelecionadosMeia.length < 2) {
-            saboresSelecionadosMeia.push({ nome, preco: precoInteira });
-            alert(`Sabor ${nome} adicionado! Escolha o segundo sabor.`);
-            if (saboresSelecionadosMeia.length === 2) {
-              const [sabor1, sabor2] = saboresSelecionadosMeia;
-              const precoFinal = Math.max(sabor1.preco, sabor2.preco);
-              pedidoArea.value += `Pizza Meia-a-meia: ${sabor1.nome} & ${sabor2.nome} - R$ ${precoFinal.toFixed(2)}\n`;
-              saboresSelecionadosMeia = [];
-            }
+      if (modoMeia) {
+        if (saboresSelecionadosMeia.length < 2) {
+          saboresSelecionadosMeia.push({ nome, preco: precoInteira });
+          alert(`Sabor ${nome} adicionado! Escolha o segundo sabor.`);
+          if (saboresSelecionadosMeia.length === 2) {
+            const [sabor1, sabor2] = saboresSelecionadosMeia;
+            const precoFinal = Math.max(sabor1.preco, sabor2.preco);
+            pedidoArea.value += `Pizza Meia-a-meia: ${sabor1.nome} & ${sabor2.nome} - R$ ${precoFinal.toFixed(2)}\n`;
+            saboresSelecionadosMeia = [];
           }
-        } else {
-          pedidoArea.value += `${nome} (${tamanho}) - R$ ${preco.toFixed(2)}\n`;
         }
       } else {
-        preco = precoInteira;
-        pedidoArea.value += `${nome} - R$ ${preco.toFixed(2)}\n`;
+        pedidoArea.value += `${tipo}: ${nome} - R$ ${preco.toFixed(2)}\n`;
       }
     }
 
