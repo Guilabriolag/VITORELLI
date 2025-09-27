@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pizzaria Vetorelli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      background: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgtlAIqbNWtq6dQL3X3N_TgGBe8Eul0udZm-YlzXxTFbkbo3sBrpMm6RJ3Pm76fv5PV7rgEGEYSkA_1l_8bJ6AA-YnRZWrtHW1m1PjLsH_Wpjb-FCto68f_a-bJc-sysKvbkXIkASwWP6N3PffP1QDwRY97RHrYiFj_cD2O1MorFgqpYwojgAZeks8pws0O/s2400/20250927_014811.jpg') no-repeat center center fixed;
+      background-size: cover;
+      animation: fundo 10s ease-in-out infinite alternate;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    @keyframes fundo {
+      0% { filter: brightness(1); }
+      100% { filter: brightness(1.05); }
+    }
+
+    #splash {
+      text-align: center;
+      padding: 60px 20px 30px;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    #splash img {
+      width: 140px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    }
+
+    #splash h1 {
+      font-size: 1.8em;
+      margin: 20px 0 10px;
+      color: #ff3c3c;
+    }
+
+    #splash p {
+      font-size: 1em;
+      margin: 5px 0;
+      color: #fdd;
+    }
+
+    #botao-cardapio {
+      margin: 30px auto;
+      display: block;
+      padding: 12px 24px;
+      font-size: 1em;
+      background: #ff3c3c;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.2s ease;
+    }
+
+    #botao-cardapio:hover {
+      transform: scale(1.05);
+      background: #ff5c5c;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      background: rgba(0,0,0,0.6);
+    }
+
+    footer h2 {
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      color: #ff3c3c;
+    }
+
+    footer button {
+      margin: 8px;
+      padding: 10px 20px;
+      background: #ff3c3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    footer button:hover {
+      background: #ff5c5c;
+    }
+  </style>
+</head>
+<body>
+
+  <section id="splash">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgIVywerTEx7Qorio908b4OTVv3x2yo2lPl38CVdhCxtJOK23tK_pRTy8-hcSIWtNLZ6ifuzf8WhXOmFqBkr2aOqR78JmGc_Wc5uRLHtLUAYenxGd26uMjEg5E0bMKp03cqXDwXuJ7yA_0LXYoUxIn6ye7Vn6Q5CnTv-oPnLAMz58zVaijoADv3cRQM5T3L/s1600/20250614_012036.png" alt="Logo Vetorelli">
+    <h1>A melhor pizza da cidade 🍕</h1>
+    <p>Massa de fermentação 24h</p>
+    <p>Molho artesanal</p>
+    <p>Ingredientes selecionados</p>
+    <p><strong>Pirapora do Bom Jesus</strong></p>
+    <p><strong>(11) 99340-7322</strong> (WhatsApp)</p>
+
+    <button id="botao-cardapio" onclick="location.href='cardapio.html'">Ver o Cardápio</button>
+  </section>
+
+  <footer>
+    <h2>Faça seu pedido</h2>
+    <button onclick="alert('Função Delivery em breve')">Delivery</button>
+    <button onclick="alert('Função Retirar em breve')">Retirar</button>
+  </footer>
+
+</body>
+</html>
