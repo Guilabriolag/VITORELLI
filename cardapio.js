@@ -56,8 +56,11 @@ function selecionar(c) {
     catAtual = c;
     document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-'+c).classList.add('active');
+    
+    // Oculta opção de meio-a-meio para Bebidas e Calzones
     const subnav = document.getElementById('subnav');
     subnav.style.display = (c === 'calzone' || c === 'bebidas') ? 'none' : 'flex';
+    
     mostrar('inteira');
 }
 
@@ -65,20 +68,23 @@ function mostrar(tipo) {
     modoMeia = (tipo === 'meia');
     document.getElementById('btn-inteira').classList.toggle('active', tipo === 'inteira');
     document.getElementById('btn-meia').classList.toggle('active', tipo === 'meia');
+    
     const container = document.getElementById('sabores');
     container.innerHTML = '';
     const lista = (catAtual === 'bebidas') ? bebidas : sabores;
 
     lista.forEach(s => {
         let preco = (catAtual === 'bebidas') ? s.p : (catAtual === 'pizza' ? s.g : s.b);
-        let tagNovo = s.novo ? `<span class="tag-novo">LANÇAMENTO</span>` : '';
+        let tagNovo = s.novo ? `<span class="tag-novo">NOVIDADE</span>` : '';
+        
         container.innerHTML += `
             <div class="item-card">
                 ${tagNovo}
-                <h3>${s.n}</h3><p>${s.d}</p>
+                <h3>${s.n}</h3>
+                <p>${s.d}</p>
                 <div class="price-row">
                     <span style="font-weight:900; font-size:1.5rem">R$ ${preco.toFixed(2)}</span>
-                    <button class="btn-add" onclick="adicionar('${s.n}', ${preco})">ADD +</button>
+                    <button class="btn-add" onclick="adicionar('${s.n}', ${preco})">ADICIONAR</button>
                 </div>
             </div>`;
     });
@@ -88,7 +94,7 @@ function adicionar(n, p) {
     const cart = document.getElementById('pedido');
     if(modoMeia) {
         meiaLista.push({n, p});
-        showCustomAlert("METADE 1/2", `Sabor: ${n}. Escolha a segunda.`);
+        showCustomAlert("METADE 1/2", `Sabor: ${n}. Escolha agora a segunda metade.`);
         if(meiaLista.length === 2) {
             let finalP = Math.max(meiaLista[0].p, meiaLista[1].p);
             let label = catAtual === 'pizza' ? "Pizza 1/2" : "Broto 1/2";
@@ -100,12 +106,12 @@ function adicionar(n, p) {
         let label = catAtual === 'bebidas' ? "Bebida" : (catAtual === 'pizza' ? "Pizza" : (catAtual === 'broto' ? "Broto" : "Calzone"));
         cart.value += `${label}: ${n} - R$ ${p.toFixed(2)}\n`;
         finalizar();
-        showCustomAlert("SUCESSO", n + " adicionado!");
+        showCustomAlert("ADICIONADO", n + " foi para o seu carrinho!");
     }
 }
 
 function limparPedido() {
-    if(confirm("Deseja limpar todo o carrinho?")) {
+    if(confirm("Deseja remover todos os itens do carrinho?")) {
         document.getElementById('pedido').value = "";
         contador = 0;
         document.getElementById('cart-count').innerText = "0";
@@ -135,9 +141,21 @@ function mostrarTroco() {
 function enviarPedido() {
     const itens = document.getElementById('pedido').value;
     const pag = document.getElementById('pagamento').value;
-    if(!itens || !pag) return showCustomAlert("ATENÇÃO", "Preencha itens e pagamento!");
-    let local = document.getElementById('entregaCampos').style.display === 'block' ? `Delivery: ${document.getElementById('endereco').value} - ${document.getElementById('bairro').value}` : "Retirada Balcão";
-    window.open(`https://wa.me/5511993407322?text=${encodeURIComponent("*NOVO PEDIDO VETORELLI*\n\n"+itens+"\n📍 "+local+"\n💳 Pagamento: "+pag)}`);
+    
+    if(!itens.trim()) return showCustomAlert("CARRINHO VAZIO", "Adicione pelo menos um item antes de finalizar.");
+    if(!pag) return showCustomAlert("PAGAMENTO", "Selecione a forma de pagamento.");
+
+    let local = document.getElementById('entregaCampos').style.display === 'block' 
+        ? `*Delivery:* ${document.getElementById('endereco').value} - ${document.getElementById('bairro').value}` 
+        : "*Retirada no Balcão*";
+
+    let troco = "";
+    if(document.getElementById('trocoArea').style.display === 'block') {
+        troco = `\n*Troco para:* R$ ${document.getElementById('valorTroco').value}`;
+    }
+
+    const mensagem = encodeURIComponent(`*NOVO PEDIDO VITORELLI*\n\n${itens}\n📍 ${local}\n💳 *Pagamento:* ${pag}${troco}`);
+    window.open(`https://wa.me/5511993407322?text=${mensagem}`);
 }
 
 function showCustomAlert(t, m) { 
@@ -150,4 +168,5 @@ function hideCustomAlert() {
     document.getElementById('custom-alert-overlay').style.display = 'none'; 
 }
 
+// Inicia o cardápio em Pizzas
 selecionar('pizza');
