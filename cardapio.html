@@ -1,503 +1,112 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Cardápio Vitorelli</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgtlAIqbNWtq6dQL3X3N_TgGBe8Eul0udZm-YlzXxTFbkbo3sBrpMm6RJ3Pm76fv5PV7rgEGEYSkA_1l_8bJ6AA-YnRZWrtHW1m1PjLsH_Wpjb-FCto68f_a-bJc-sysKvbkXIkASwWP6N3PffP1QDwRY97RHrYiFj_cD2O1MorFgqpYwojgAZeks8pws0O/s2400/20250927_014811.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-      padding: 20px;
-    }
-
-    header { text-align: center; margin-bottom: 20px; }
-    header img {
-      width: 100px;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(255,255,255,0.3);
-    }
-    header h1 {
-      margin-top: 10px;
-      font-size: 1.6em;
-      color: #fff;
-    }
-
-    nav, .subnav {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    nav button, .subnav button {
-      margin: 5px;
-      padding: 10px 20px;
-      background: #ff3c3c;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .categoria {
-      display: none;
-      background: rgba(0,0,0,0.6);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 80px;
-    }
-
-    .item {
-      margin-bottom: 15px;
-      border-bottom: 1px solid #ff3c3c;
-      padding-bottom: 10px;
-    }
-
-    .item h3 { margin-bottom: 5px; color: #ff3c3c; }
-    .item p { margin: 3px 0; font-size: 0.95em; }
-    .item button {
-      margin-top: 5px;
-      padding: 6px 12px;
-      background: #ff3c3c;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #carrinhoToggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      background: #ff3c3c;
-      color: white;
-      text-align: center;
-      line-height: 60px;
-      border-radius: 50%;
-      font-size: 2em;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      cursor: pointer;
-      z-index: 1001;
-    }
-
-    #carrinho {
-      position: fixed;
-      bottom: -100%;
-      left: 0;
-      width: 100%;
-      background: rgba(0,0,0,0.95);
-      padding: 20px;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      transition: bottom 0.3s ease;
-      z-index: 999;
-    }
-
-    #carrinho h2 {
-      margin-bottom: 10px;
-      color: #ff3c3c;
-    }
-    
-    #carrinho .fechar {
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 1.5em;
-        cursor: pointer;
-        color: #fff;
-    }
-
-    /* Alterações para o layout proporcional */
-    #carrinho .botoes-opcao {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    #carrinho .botoes-opcao button {
-      flex: 1;
-      padding: 12px 0;
-      font-size: 1.1em;
-      background: #ff3c3c;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    #carrinho .botoes-opcao button:hover {
-      background: #ff5c5c;
-    }
-
-    textarea#pedido {
-        width: 100%;
-        height: 150px;
-        padding: 10px;
-        margin: 8px 0;
-        border-radius: 6px;
-        border: none;
-        font-size: 0.95em;
-        resize: none;
-    }
-
-    #pedidoDetalhes input,
-    #pedidoDetalhes select {
-        width: 100%;
-        padding: 10px;
-        margin: 8px 0;
-        border-radius: 6px;
-        border: none;
-        font-size: 0.95em;
-    }
-
-    #enviar {
-      width: 100%; /* Botão "Enviar Pedido" ocupa a largura total */
-      margin-top: 10px;
-      padding: 12px 20px;
-      background: #ff3c3c;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    #enviar:hover { background: #ff5c5c; }
-
-    /* Estilos para o Pop-up personalizado */
-    .custom-alert-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      transition: opacity 0.3s ease;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .custom-alert-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .custom-alert-box {
-      background: #2c2c2c;
-      color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-      text-align: center;
-      max-width: 80%;
-      transform: scale(0.9);
-      transition: transform 0.3s ease;
-    }
-    
-    .custom-alert-overlay.show .custom-alert-box {
-        transform: scale(1);
-    }
-
-    .custom-alert-box h3 {
-      color: #ff3c3c;
-      margin-bottom: 10px;
-    }
-
-    .custom-alert-box button {
-      margin-top: 15px;
-      padding: 8px 20px;
-      background: #ff3c3c;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <title>Pizzaria Vitorelli - Cardápio 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="Cardapio.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <header>
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgIVywerTEx7Qorio908b4OTVv3x2yo2lPl38CVdhCxtJOK23tK_pRTy8-hcSIWtNLZ6ifuzf8WhXOmFqBkr2aOqR78JmGc_Wc5uRLHtLUAYenxGd26uMjEg5E0bMKp03cqXDwXuJ7yA_0LXYoUxIn6ye7Vn6Q5CnTv-oPnLAMz58zVaijoADv3cRQM5T3L/s1600/20250614_012036.png" alt="Logo Vitorelli">
-    <h1>Cardápio Vitorelli</h1>
-  </header>
+    <div class="background-fix"></div>
 
-  <nav>
-    <button onclick="selecionar('pizza')">PIZZAS</button>
-    <button onclick="selecionar('broto')">BROTO</button>
-    <button onclick="selecionar('calzone')">CALZONE</button>
-    <button onclick="selecionar('bebidas')">BEBIDAS</button>
-  </nav>
+    <header>
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgIVywerTEx7Qorio908b4OTVv3x2yo2lPl38CVdhCxtJOK23tK_pRTy8-hcSIWtNLZ6ifuzf8WhXOmFqBkr2aOqR78JmGc_Wc5uRLHtLUAYenxGd26uMjEg5E0bMKp03cqXDwXuJ7yA_0LXYoUxIn6ye7Vn6Q5CnTv-oPnLAMz58zVaijoADv3cRQM5T3L/s1600/20250614_012036.png" alt="Logo" class="logo-top">
+        <h1>VITORELLI</h1>
+    </header>
 
-  <div class="subnav" id="subnav" style="display:none;">
-    <button onclick="mostrar('inteira')">Inteira</button>
-    <button onclick="mostrar('meia')">Meia-meia</button>
-  </div>
+    <nav class="main-nav">
+        <button id="btn-pizza" onclick="selecionar('pizza')" class="btn-nav active">PIZZAS</button>
+        <button id="btn-broto" onclick="selecionar('broto')" class="btn-nav">BROTOS</button>
+        <button id="btn-calzone" onclick="selecionar('calzone')" class="btn-nav">CALZONES</button>
+        <button id="btn-bebidas" onclick="selecionar('bebidas')" class="btn-nav">BEBIDAS</button>
+    </nav>
 
-  <section id="sabores" class="categoria"></section>
-  <div id="carrinhoToggle" onclick="toggleCarrinho()">🛒</div>
-
-  <section id="carrinho">
-    <span class="fechar" onclick="toggleCarrinho()">X</span>
-    <h2>Resumo do Pedido</h2>
-    <textarea id="pedido" placeholder="Itens selecionados..."></textarea>
-    
-    <div class="botoes-opcao">
-      <button onclick="mostrarDados('retirar')">Retirar</button>
-      <button onclick="mostrarDados('delivery')">Delivery</button>
+    <div class="subnav" id="subnav">
+        <button id="btn-inteira" onclick="mostrar('inteira')" class="active">INTEIRA</button>
+        <button id="btn-meia" onclick="mostrar('meia')">MEIA-MEIA</button>
     </div>
 
-    <div id="pedidoDetalhes" style="display:none;">
-      <div id="entregaCampos" style="display:none;">
-        <input type="text" id="endereco" placeholder="Endereço e Número">>
-<select id="bairro">
-  <option value="">Selecione o bairro</option>
-  <option value="Centro">CENTRO - R$ 3,00</option>
-  <option value="Chácara Boa Vista">CHÁCARA BOA VISTA - R$ 3,00</option>
-  <option value="Green Hills">GREEN HILLS - R$ 10,00</option>
-  <option value="JD. Bom Jesus">JD. BOM JESUS - R$ 3,00</option>
-  <option value="Morro Branco">MORRO BRANCO - R$ 4,00</option>
-  <option value="Parque das Avencas">PARQUE DAS AVENCAS - R$ 3,00</option>
-  <option value="Paiol/KM 50">PAIOL / KM 50 - R$ 7,00</option>
-  <option value="Trailer Club Gaivota">TRAILER CLUB GAIVOTA - R$ 10,00</option>
-  <option value="Vila Nova">VILA NOVA - R$ 3,00</option>
-</select>
+    <main id="sabores" class="categoria-container"></main>
 
-      </div>
-      <select id="pagamento" onchange="mostrarTroco()">
-        <option value="">Forma de pagamento</option>
-        <option value="Cartão">Cartão</option>
-        <option value="Pix">Pix</option>
-        <option value="Dinheiro">Dinheiro</option>
-      </select>
-      <div id="trocoArea" style="display:none;">
-        <select id="precisaTroco" onchange="trocoValor()">
-          <option value="Não">Precisa de troco?</option>
-          <option value="Sim">Sim</option>
-          <option value="Não">Não</option>
-        </select>
-        <input type="text" id="valorTroco" placeholder="Troco para quanto?" style="display:none;">
-      </div>
-      <button id="enviar" onclick="enviarPedido()">Enviar Pedido</button>
+    <div class="brand-section">
+        <p>INGREDIENTES DE PRIMEIRA</p>
+        <div class="carousel-wrapper">
+            <div class="carousel-track">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgjXm_49v2kv9GDu0Qh9LbdIy5IKpscrD1upAKjjlI8rfcwTOEnbh5OIdv6FaAsYivw-3fmezw3CTE0HmzxMJWPXfEXaMsMhRqsoI_zMWOPy9RSnIli3rvQcuIVqqI_v4L6PH8CCl2H-Udnje7SewB8Wo3KMAR4puwIjJT2eZey6CczVn1cYpAFG8Gwarx6/s560/20251222_094017.jpg">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi2wdXHPA7jMVKb_MnxxmOQu7BbVMPj7aNm8Z2rpF5gGJyrd3YR7NkDCBmuRIdqi1ImcUJe1_0f2tN9rWlGKTnJQMF8masXwLjEurW-xgRI0s-ouu0taKsbFWlZZkMZKouXiNw3ntFzqT3Jeyw7bBdbowXMsFSnfo3f3BiOJnmWYfdf4OaMb6NFpSGlFQQf/s400/images%20(9).jpeg">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhBqgr7__voydKd8RrJmdvBnOwFsoIz1GLwlj0H_uYNYxknpJIEKEJvgaR0dgTSdBGuLCnIV83Q_yWPPVYush41CeUfuVTMBjN9YkSFHWks1stViNDKPI3bW51gFJn9gsVZ2k_5OVsGrsSFEz9Esnl_1kEotSAx4wU0-i_AEuYl26w6mjQoYBrtApjIJDMJ/s735/images%20(41).jpeg">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjtI0dLj6zjKU7BkLTF5lz1UWlStQoVJVzPeBcTvPqX-CxxpohKttLvU9PB5usiqFCIIPmOclIHF246rhXDSRjQEof3SAfPNf2pk0HxIETPsthieLUO2jUz0rN2oxPgwunl7iHb1vSoZacjF1tvniP6HL3bc-uEtsjQUx6nIP5coBtFcuGF-Gw4zYSdKqaO/s600/coca-cola-logo-png_seeklogo-32891.png">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiEscmMSTWuW11qtlLcZ76mO0IWEqPEF_upeM5isQ37_VEvmrwvJGPnAkE61nkZTEGbsaLgc2lKV91mbSXQ6TOC-71H0Z2xcBkAl7aaP7E_zBVY9PwdIe8i5dobmIgNvq3HThFt2eHHY6wjEjkpi1ld0dw5ckaB9gRVARlRW4TW_i9LN36JYiwg9jGVJKrg/s348/png-clipart-requeijao-catupiry-cream-cheese-food-cheese-food-text-thumbnail.png">
+            </div>
+        </div>
     </div>
-  </section>
 
-  <div id="custom-alert-overlay" class="custom-alert-overlay" onclick="hideCustomAlert()">
-    <div id="custom-alert-box" class="custom-alert-box" onclick="event.stopPropagation()">
-      <h3 id="custom-alert-title"></h3>
-      <p id="custom-alert-message"></p>
-      <button onclick="hideCustomAlert()">OK</button>
+    <div id="carrinhoToggle" onclick="toggleCarrinho()">
+        <span class="cart-icon">🛒</span>
+        <span id="cart-count">0</span>
     </div>
-  </div>
 
-  <script>
-    const sabores = [
-      { nome: "4 Queijos", ingredientes: "molho, mussarela, parmesão, provolone, gorgonzola, azeitona e orégano", inteira: 47, broto: 37, categoria: "pizza" },
-      { nome: "5 Queijos", ingredientes: "molho, mussarela, parmesão, provolone, gorgonzola, catupiry, azeitona e orégano", inteira: 49, broto: 39, categoria: "pizza" },
-      { nome: "Abobrinha I", ingredientes: "molho, mussarela, abobrinha, alho frito, azeitona e orégano", inteira: 41, broto: 34, categoria: "pizza" },
-      { nome: "Abobrinha II", ingredientes: "molho, mussarela, abobrinha, pimenta calabresa, azeitona e orégano", inteira: 41, broto: 34, categoria: "pizza" },
-      { nome: "Alho", ingredientes: "molho, mussarela, alho frito, azeitona e orégano", inteira: 45, broto: 35, categoria: "pizza" },
-      { nome: "Aliche", ingredientes: "molho, mussarela, aliche, tomate, azeitona e orégano", inteira: 49, broto: 39, categoria: "pizza" },
-      { nome: "Americana", ingredientes: "molho, mussarela, lombinho, pimentão, champignon, tomate cereja, azeitona sem caroço e orégano", inteira: 50, broto: 40, categoria: "pizza" },
-      { nome: "Atum I", ingredientes: "molho, atum, cebola, azeitona e orégano", inteira: 46, broto: 36, categoria: "pizza" },
-      { nome: "Atum I (com mussarela)", ingredientes: "molho, mussarela, atum, cebola, azeitona e orégano", inteira: 48, broto: 38, categoria: "pizza" },
-      { nome: "Bacon", ingredientes: "molho, mussarela, bacon, azeitona e orégano", inteira: 44, broto: 34, categoria: "pizza" },
-      { nome: "Brócolis", ingredientes: "molho, brócolis, mussarela, bacon, azeitona e orégano", inteira: 47, broto: 38, categoria: "pizza" },
-      { nome: "Calabresa I", ingredientes: "molho, calabresa, tomate, cebola, azeitona e orégano", inteira: 38, broto: 29, categoria: "pizza" },
-      { nome: "Calabresa II", ingredientes: "molho, mussarela, calabresa, cebola, azeitona e orégano", inteira: 43, broto: 34, categoria: "pizza" },
-      { nome: "Frango Catupiry", ingredientes: "molho, frango, catupiry, azeitona e orégano", inteira: 47, broto: 37, categoria: "pizza" },
-      { nome: "Gênova", ingredientes: "molho, mussarela, provolone, presunto, molho pesto e azeitona", inteira: 48, broto: 37, categoria: "pizza" },
-      { nome: "Lombinho", ingredientes: "molho, mussarela, lombinho, provolone, azeitona e orégano", inteira: 46, broto: 36, categoria: "pizza" },
-      { nome: "Marguerita", ingredientes: "molho, mussarela, parmesão, tomate, azeitona e manjericão", inteira: 40, broto: 30, categoria: "pizza" },
-      { nome: "Mussarela", ingredientes: "molho, mussarela, tomate, azeitona e orégano", inteira: 38, broto: 29, categoria: "pizza" },
-      { nome: "Peperonni", ingredientes: "molho, mussarela, peperonni e azeitona", inteira: 49, broto: 39, categoria: "pizza" },
-      { nome: "Pomodoro", ingredientes: "molho, parmesão, alho frito, tomate e orégano", inteira: 44, broto: 34, categoria: "pizza" },
-      { nome: "Potatosa", ingredientes: "molho, batata, parmesão, calabresa, catupiry, azeitona sem caroço e orégano", inteira: 45, broto: 35, categoria: "pizza" },
-      { nome: "Portuguesa", ingredientes: "molho, mussarela, presunto, ovo cozido, ervilha, tomate, azeitona sem caroço e orégano", inteira: 50, broto: 40, categoria: "pizza" },
-      { nome: "Rúcula e Tomate Seco", ingredientes: "molho, mussarela, rúcula, tomate seco, azeitona e orégano", inteira: 46, broto: 36, categoria: "pizza" },
-      { nome: "Toscana", ingredientes: "molho, mussarela, linguiça calabresa moída, tomate, azeitona e orégano", inteira: 45, broto: 35, categoria: "pizza" },
-      { nome: "Anita e Garibaldi", ingredientes: "parmesão e goiabada", inteira: 45, broto: 35, categoria: "doce", tipo: "pizza" },
-      { nome: "Banana", ingredientes: "banana, açúcar, doce de leite e canela", inteira: 41, broto: 31, categoria: "doce", tipo: "pizza" },
-      { nome: "Calzone de Frango", ingredientes: "molho, frango, catupiry, azeitona e orégano", inteira: 37, broto: null, categoria: "calzone" },
-      { nome: "Calzone de Calabresa", ingredientes: "molho, calabresa, cebola, azeitona e orégano", inteira: 37, broto: null, categoria: "calzone" },
-      { nome: "Coca-Cola 2L", ingredientes: "Refrigerante", inteira: 18, broto: null, categoria: "bebidas" },
-      { nome: "Guaraná Antarctica 2L", ingredientes: "Refrigerante", inteira: 18, broto: null, categoria: "bebidas" },
-      { nome: "Guaraná Kuat 2L", ingredientes: "Refrigerante", inteira: 12, broto: null, categoria: "bebidas" },
-      { nome: "HEINEKEN", ingredientes: "Cerveja", inteira: 8, broto: null, categoria: "bebidas" }
-    ];
+    <section id="carrinho">
+        <div class="carrinho-header">
+            <h2>MEU PEDIDO</h2>
+            <button class="btn-fechar" onclick="toggleCarrinho()">VOLTAR [X]</button>
+        </div>
 
-    let categoriaAtual = 'pizza';
-    let modoMeia = false;
-    let saboresSelecionadosMeia = [];
+        <div class="carrinho-acoes-topo">
+            <small style="color: #888;">Toque no texto abaixo para editar ou adicionar observações:</small>
+            <button class="btn-limpar" onclick="limparPedido()">LIMPAR TUDO</button>
+        </div>
 
-    function selecionar(categoria) {
-      categoriaAtual = categoria;
-      document.getElementById('sabores').innerHTML = '';
-      document.getElementById('sabores').style.display = 'block';
+        <textarea id="pedido" placeholder="Seu carrinho está vazio..."></textarea>
 
-      if (categoria === 'pizza' || categoria === 'broto') {
-        document.getElementById('subnav').style.display = 'block';
-        mostrar('inteira');
-      } else {
-        document.getElementById('subnav').style.display = 'none';
-        mostrar(null);
-      }
-    }
+        <div class="entrega-grid">
+            <button id="btn-retirar" onclick="mostrarDados('retirar')" class="btn-opcao-gigante">VOU RETIRAR</button>
+            <button id="btn-delivery" onclick="mostrarDados('delivery')" class="btn-opcao-gigante">DELIVERY</button>
+        </div>
 
-    function mostrar(tipo) {
-      modoMeia = tipo === 'meia';
-      const saboresContainer = document.getElementById('sabores');
-      saboresContainer.innerHTML = '';
-      saboresSelecionadosMeia = [];
+        <div id="pedidoDetalhes" style="display:none; margin-top:20px;">
+            <div id="entregaCampos" style="display:none;">
+                <input type="text" id="endereco" class="input-grande" placeholder="Rua e Número">
+                <select id="bairro" class="input-grande">
+                    <option value="">Selecione o Bairro (Taxa)</option>
+                    <option value="CENTRO">CENTRO - R$ 3,00</option>
+                    <option value="CHÁCARA BOAVISTA">CHÁCARA BOAVISTA - R$ 3,00</option>
+                    <option value="GREEN HILLS">GREEN HILLS - R$ 10,00</option>
+                    <option value="JD. BOM JESUS">JD. BOM JESUS - R$ 3,00</option>
+                    <option value="MORRO BRANCO">MORRO BRANCO - R$ 4,00</option>
+                    <option value="PARQUE DAS AVENCAS">PARQUE DAS AVENCAS - R$ 3,00</option>
+                    <option value="PAIOL/ KM 50">PAIOL/ KM 50 - R$ 7,00</option>
+                    <option value="TRAILER CLUB">TRAILER CLUB - R$ 0,00</option>
+                    <option value="GAIVOTA">GAIVOTA - R$ 10,00</option>
+                    <option value="VILA NOVA">VILA NOVA - R$ 3,00</option>
+                </select>
+            </div>
+            
+            <select id="pagamento" class="input-grande" onchange="mostrarTroco()">
+                <option value="">Forma de Pagamento</option>
+                <option value="Cartão">Cartão</option>
+                <option value="Pix">Pix</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
 
-      const saboresFiltrados = sabores.filter(sabor => {
-        if (categoriaAtual === 'pizza') {
-          return (sabor.categoria === 'pizza' || sabor.categoria === 'doce') && sabor.inteira;
-        }
-        if (categoriaAtual === 'broto') {
-          return (sabor.categoria === 'pizza' || sabor.categoria === 'doce') && sabor.broto;
-        }
-        if (categoriaAtual === 'calzone') {
-          return (sabor.categoria === 'pizza' || sabor.categoria === 'doce');
-        }
-        return sabor.categoria === categoriaAtual;
-      });
+            <div id="trocoArea" style="display:none;">
+                <input type="number" id="valorTroco" class="input-grande" placeholder="Troco para quanto?">
+            </div>
 
-      saboresFiltrados.forEach(sabor => {
-        const item = document.createElement('div');
-        item.className = 'item';
-        let precoTexto = '';
-        if (categoriaAtual === 'pizza') {
-          precoTexto = sabor.inteira ? `R$ ${sabor.inteira.toFixed(2)}` : 'Preço sob consulta';
-        } else if (categoriaAtual === 'broto') {
-          precoTexto = sabor.broto ? `R$ ${sabor.broto.toFixed(2)}` : 'Preço sob consulta';
-        } else if (categoriaAtual === 'calzone') {
-          const precoCalzone = 37;
-          precoTexto = `R$ ${precoCalzone.toFixed(2)}`;
-        } else {
-          precoTexto = sabor.inteira ? `R$ ${sabor.inteira.toFixed(2)}` : 'Preço sob consulta';
-        }
+            <button id="enviar" onclick="enviarPedido()">FINALIZAR NO WHATSAPP</button>
+        </div>
+    </section>
 
-        item.innerHTML = `
-          <h3>${sabor.nome}</h3>
-          <p>${sabor.ingredientes}</p>
-          <p>Preço: ${precoTexto}</p>
-          <button onclick="adicionar('${sabor.nome}', ${sabor.inteira}, ${sabor.broto})">Adicionar</button>
-        `;
-        saboresContainer.appendChild(item);
-      });
-    }
+    <div id="custom-alert-overlay" class="alert-overlay">
+        <div class="alert-box">
+            <h3 id="custom-alert-title"></h3>
+            <p id="custom-alert-message"></p>
+            <button onclick="hideCustomAlert()" class="btn-alert">OK, ENTENDI!</button>
+        </div>
+    </div>
 
-    function adicionar(nome, precoInteira, precoBroto) {
-      const pedidoArea = document.getElementById('pedido');
-      let preco;
-      let tipo;
-
-      if (categoriaAtual === 'pizza') {
-        tipo = 'Pizza Inteira';
-        preco = precoInteira;
-      } else if (categoriaAtual === 'broto') {
-        tipo = 'Pizza Broto';
-        preco = precoBroto;
-      } else if (categoriaAtual === 'calzone') {
-        tipo = 'Calzone';
-        preco = 37;
-      } else {
-        tipo = 'Bebida';
-        preco = precoInteira;
-      }
-
-      if (modoMeia) {
-        if (saboresSelecionadosMeia.length < 2) {
-          saboresSelecionadosMeia.push({ nome, preco: precoInteira });
-          showCustomAlert('Vitorelli', `Sabor ${nome} adicionado! Escolha o segundo sabor.`);
-          if (saboresSelecionadosMeia.length === 2) {
-            const [sabor1, sabor2] = saboresSelecionadosMeia;
-            const precoFinal = Math.max(sabor1.preco, sabor2.preco);
-            pedidoArea.value += `Pizza Meia-a-meia: ${sabor1.nome} & ${sabor2.nome} - R$ ${precoFinal.toFixed(2)}\n`;
-            showCustomAlert('Vitorelli', `Meia ${sabor1.nome} e Meia ${sabor2.nome} adicionadas ao carrinho.`);
-            saboresSelecionadosMeia = [];
-          }
-        }
-      } else {
-        pedidoArea.value += `${tipo}: ${nome} - R$ ${preco.toFixed(2)}\n`;
-        showCustomAlert('Vitorelli', `${tipo}: ${nome} adicionado ao carrinho.`);
-      }
-    }
-
-    function toggleCarrinho() {
-      const carrinho = document.getElementById('carrinho');
-      carrinho.style.bottom = carrinho.style.bottom === '0px' ? '-100%' : '0px';
-    }
-
-    function mostrarDados(tipo) {
-      document.getElementById('pedidoDetalhes').style.display = 'block';
-      const entrega = document.getElementById('entregaCampos');
-      entrega.style.display = tipo === 'delivery' ? 'block' : 'none';
-    }
-
-    function mostrarTroco() {
-      const forma = document.getElementById('pagamento').value;
-      document.getElementById('trocoArea').style.display = forma === 'Dinheiro' ? 'block' : 'none';
-      document.getElementById('valorTroco').style.display = 'none';
-    }
-
-    function trocoValor() {
-      const precisa = document.getElementById('precisaTroco').value;
-      document.getElementById('valorTroco').style.display = precisa === 'Sim' ? 'block' : 'none';
-    }
-
-    function enviarPedido() {
-      const pedido = document.getElementById('pedido').value.trim();
-      if (!pedido) return alert('Adicione itens ao pedido.');
-
-      let msg = `🛒 *Pedido Vitorelli*\n\n${pedido}\n`;
-
-      const endereco = document.getElementById('endereco')?.value;
-      const bairro = document.getElementById('bairro')?.value;
-      let taxa = 0;
-      if (bairro === 'Vila Nova' || bairro === 'Centro' || bairro === 'JD. Bom Jesus') taxa = 3;
-      if (bairro === 'Morro Branco') taxa = 4;
-
-      if (endereco) msg += `📍 Endereço: ${endereco}\n🏘️ Bairro: ${bairro}\n🚚 Taxa de entrega: R$ ${taxa.toFixed(2)}\n`;
-
-      const pagamento = document.getElementById('pagamento').value;
-      msg += `💳 Pagamento: ${pagamento}\n`;
-
-      if (pagamento === 'Dinheiro') {
-        const precisa = document.getElementById('precisaTroco').value;
-        msg += `Troco: ${precisa}`;
-        if (precisa === 'Sim') {
-          const valor = document.getElementById('valorTroco').value;
-          msg += ` para R$ ${valor}`;
-        }
-        msg += `\n`;
-      }
-
-      const numero = '5511993407322';
-      const texto = encodeURIComponent(msg);
-      window.open(`https://wa.me/${numero}?text=${texto}`, '_blank');
-    }
-
-    function showCustomAlert(title, message) {
-      document.getElementById('custom-alert-title').innerText = title;
-      document.getElementById('custom-alert-message').innerText = message;
-      document.getElementById('custom-alert-overlay').classList.add('show');
-    }
-
-    function hideCustomAlert() {
-      document.getElementById('custom-alert-overlay').classList.remove('show');
-    }
-  </script>
+    <script src="Cardapio.js"></script>
 </body>
 </html>
