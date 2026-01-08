@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Pizzaria Vitorelli - Cardápio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="Cardapio.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="background-fix"></div>
+
+    <header>
+        <div id="status-loja" class="status-badge">CARREGANDO...</div>
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgIVywerTEx7Qorio908b4OTVv3x2yo2lPl38CVdhCxtJOK23tK_pRTy8-hcSIWtNLZ6ifuzf8WhXOmFqBkr2aOqR78JmGc_Wc5uRLHtLUAYenxGd26uMjEg5E0bMKp03cqXDwXuJ7yA_0LXYoUxIn6ye7Vn6Q5CnTv-oPnLAMz58zVaijoADv3cRQM5T3L/s1600/20250614_012036.png" alt="Logo" class="logo-top">
+        <h1>VITORELLI</h1>
+    </header>
+
+    <nav class="main-nav">
+        <button id="btn-pizza" onclick="selecionar('pizza')" class="btn-nav active">PIZZAS</button>
+        <button id="btn-broto" onclick="selecionar('broto')" class="btn-nav">BROTOS</button>
+        <button id="btn-calzone" onclick="selecionar('calzone')" class="btn-nav">CALZONES</button>
+        <button id="btn-bebidas" onclick="selecionar('bebidas')" class="btn-nav">BEBIDAS</button>
+    </nav>
+
+    <div class="subnav" id="subnav">
+        <button id="btn-inteira" onclick="mostrar('inteira')" class="active">INTEIRA</button>
+        <button id="btn-meia" onclick="mostrar('meia')">MEIA-MEIA</button>
+    </div>
+
+    <main id="sabores" class="categoria-container"></main>
+
+    <div class="brand-section">
+        <p>INGREDIENTES DE PRIMEIRA</p>
+        <div class="carousel-wrapper">
+            <div class="carousel-track">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjuXCT5BsTvROIUm8gjnadk7sybH8UfuY1K3vx6cn-UZOv7L323OB5b-osQGiCjxcTe17mMDXkiGUJvm4H4Bt2FVWWRGgYWWTfdR1YIBu02nGPVBeptudNHo2uJqakVfxjaeNiTJfBYgx5pID-_Ar7gC9WYSCjpXxtCsUGSkRO5L8xwGhl8p-1wyWrcyVWm/s1212/coca-cola-logo-7.png" alt="Coca-Cola">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhxqlX6tyFH-WaLp5DAfAr5TCN2UDBW7agMxKzoBdp3IuK_iwCE2bBuqmNyx1RXg_voQ0RXQnyxt5V9p0zTF3bu21C5LyxozKUzBE6CLNuMJWB_WgDBZmks1PN9oHXHBeFty0l-O5qH9YYRmIsB8CbwZVdLGfUXiSQCvT83kVz0ImIZIss9xhiyO6mm0p7M/s2797/20260106_234722.png" alt="Kuat">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgETuOo7qQklGhzw45COBosNZ-K1ETmVWoTj6sAopXiAHRvVSG7MUsbVvl3Fx29MQa87BIt_kZBY6bc-t71abfj5RatG2fdtW9UzaBx5HpkD68XcwvLMH6T60eC3vMxzSxIQhRnZZy_sO1DzKxnkBIJ82FbYvU3zslfi9BYwzX4S91Lgw3gVNoeQx5lPKD6/s937/Clipped_image_20260106_205130.png" alt="Ovomaltine">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiEscmMSTWuW11qtlLcZ76mO0IWEqPEF_upeM5isQ37_VEvmrwvJGPnAkE61nkZTEGbsaLgc2lKV91mbSXQ6TOC-71H0Z2xcBkAl7aaP7E_zBVY9PwdIe8i5dobmIgNvq3HThFt2eHHY6wjEjkpi1ld0dw5ckaB9gRVARlRW4TW_i9LN36JYiwg9jGVJKrg/s348/png-clipart-requeijao-catupiry-cream-cheese-food-cheese-food-text-thumbnail.png" alt="Catupiry">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgjXm_49v2kv9GDu0Qh9LbdIy5IKpscrD1upAKjjlI8rfcwTOEnbh5OIdv6FaAsYivw-3fmezw3CTE0HmzxMJWPXfEXaMsMhRqsoI_zMWOPy9RSnIli3rvQcuIVqqI_v4L6PH8CCl2H-Udnje7SewB8Wo3KMAR4puwIjJT2eZey6CczVn1cYpAFG8Gwarx6/s560/20251222_094017.jpg" alt="Venturelli">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi2wdXHPA7jMVKb_MnxxmOQu7BbVMPj7aNm8Z2rpF5gGJyrd3YR7NkDCBmuRIdqi1ImcUJe1_0f2tN9rWlGKTnJQMF8masXwLjEurW-xgRI0s-ouu0taKsbFWlZZkMZKouXiNw3ntFzqT3Jeyw7bBdbowXMsFSnfo3f3BiOJnmWYfdf4OaMb6NFpSGlFQQf/s400/images%20(9).jpeg" alt="Mussarela">
+            </div>
+        </div>
+    </div>
+
+    <div id="carrinhoToggle" onclick="toggleCarrinho()">
+        <span class="cart-icon">🛒</span>
+        <span id="cart-count">0</span>
+    </div>
+
+    <section id="carrinho">
+        <div class="carrinho-header">
+            <h2>MEU PEDIDO</h2>
+            <button class="btn-fechar" onclick="toggleCarrinho()">VOLTAR [X]</button>
+        </div>
+
+        <div id="carrinho-vazio-msg" style="text-align: center; padding: 20px; color: #888;">
+            Seu carrinho está vazio...
+        </div>
+
+        <textarea id="pedido" readonly placeholder="Os itens do seu pedido aparecerão aqui..."></textarea>
+        
+        <div class="carrinho-acoes">
+            <button class="btn-limpar" onclick="limparCarrinho()">🗑️ LIMPAR</button>
+            <button class="btn-voltar-compra" onclick="toggleCarrinho()">⬅️ VOLTAR</button>
+        </div>
+
+        <div class="total-container">
+            <span>TOTAL:</span>
+            <span id="total-valor">R$ 0,00</span>
+        </div>
+
+        <div class="opcoes-adicionais">
+            <textarea id="observacoes" class="input-grande" placeholder="Observações (ex: sem cebola, massa fina...)"></textarea>
+            <div class="cupom-area">
+                <input type="text" id="cupom" class="input-grande" placeholder="Tem um Cupom?">
+            </div>
+        </div>
+
+        <div class="entrega-grid">
+            <button id="btn-retirar" onclick="mostrarDados('retirar')" class="btn-opcao-gigante">📍 VOU RETIRAR</button>
+            <button id="btn-delivery" onclick="mostrarDados('delivery')" class="btn-opcao-gigante">🛵 DELIVERY</button>
+        </div>
+
+        <div id="pedidoDetalhes" style="display:none;">
+            <div id="entregaCampos" style="display:none;">
+                <input type="text" id="endereco" class="input-grande" placeholder="Rua e Número">
+                <input type="text" id="referencia" class="input-grande" placeholder="Ponto de Referência">
+                
+                <select id="bairro" class="input-grande" onchange="checkOutroBairro(this.value)">
+                    <option value="">Selecione o Bairro (Taxa)</option>
+                    <option value="CENTRO|3">CENTRO - R$ 3,00</option>
+                    <option value="CHÁCARA BOAVISTA|3">CHÁCARA BOAVISTA - R$ 3,00</option>
+                    <option value="GREEN HILLS|10">GREEN HILLS - R$ 10,00</option>
+                    <option value="JD. BOM JESUS|3">JD. BOM JESUS - R$ 3,00</option>
+                    <option value="MORRO BRANCO|4">MORRO BRANCO - R$ 4,00</option>
+                    <option value="PARQUE DAS AVENCAS|3">PARQUE DAS AVENCAS - R$ 3,00</option>
+                    <option value="PAIOL/ KM 50|7">PAIOL/ KM 50 - R$ 7,00</option>
+                    <option value="TRAILER CLUB|0">TRAILER CLUB - R$ 0,00</option>
+                    <option value="GAIVOTA|10">GAIVOTA - R$ 10,00</option>
+                    <option value="VILA NOVA|3">VILA NOVA - R$ 3,00</option>
+                    <option value="OUTRO|0">OUTRO BAIRRO (A avaliar)</option>
+                </select>
+                <div id="outroBairroArea" style="display:none;">
+                    <input type="text" id="outroBairroInput" class="input-grande" placeholder="Digite seu Bairro">
+                    <p class="aviso-taxa">*Taxa e cobertura sujeitas a avaliação.</p>
+                </div>
+            </div>
+
+            <select id="pagamento" class="input-grande" onchange="mostrarTroco()">
+                <option value="">Forma de Pagamento</option>
+                <option value="Cartão">💳 Cartão</option>
+                <option value="Pix">💎 Pix</option>
+                <option value="Dinheiro">💵 Dinheiro</option>
+            </select>
+
+            <div id="trocoArea" style="display:none;">
+                <input type="number" id="valorTroco" class="input-grande" placeholder="Troco para quanto?">
+            </div>
+
+            <button id="enviar" onclick="enviarPedido()">✅ FINALIZAR NO WHATSAPP</button>
+        </div>
+    </section>
+
+    <div id="modal-extras" class="alert-overlay">
+        <div class="alert-box extra-box">
+            <h3>INGREDIENTES EXTRAS</h3>
+            <p id="extra-sabor-nome"></p>
+            <div id="lista-extras-container"></div>
+            <button onclick="fecharExtras()" class="btn-alert" style="background: #444;">PULAR EXTRAS</button>
+        </div>
+    </div>
+
+    <div id="custom-alert-overlay" class="alert-overlay">
+        <div class="alert-box">
+            <h3 id="custom-alert-title"></h3>
+            <p id="custom-alert-message"></p>
+            <button onclick="hideCustomAlert()" class="btn-alert">OK, ENTENDI!</button>
+        </div>
+    </div>
+
+    <script src="Cardapio.js"></script>
+</body>
+</html>
